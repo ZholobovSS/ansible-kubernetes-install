@@ -1,0 +1,4 @@
+---
+- name: Install helm
+  ansible.builtin.shell: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+  when: inventory_hostname in groups['control_nodes']

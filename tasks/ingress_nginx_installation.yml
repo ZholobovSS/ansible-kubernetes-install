@@ -1,0 +1,11 @@
+---
+- name: Install ingress nginx
+  become: yes
+  become_user: "{{ user_name }}"
+  args:
+    chdir: $HOME
+  ansible.builtin.shell: |
+    helm upgrade --install ingress-nginx ingress-nginx \
+    --repo https://kubernetes.github.io/ingress-nginx \
+    --namespace ingress-nginx --create-namespace
+  when: inventory_hostname in groups['control_nodes']

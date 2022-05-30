@@ -1,0 +1,10 @@
+---
+- name: "Check if group 'control_nodes' exists"
+  ansible.builtin.fail:
+    msg: "You should set group 'control_nodes' and create hosts in there"
+  when: "'control_nodes' not in groups and groups['control_nodes']"
+
+- name: "Check if group 'worker_nodes' exists"
+  ansible.builtin.fail:
+    msg: "You should set group 'worker_nodes' and create hosts in there"
+  when: "'worker_nodes' not in groups and groups['worker_nodes']"

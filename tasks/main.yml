@@ -1,0 +1,25 @@
+---
+# tasks file for zh2s.kubernetes_install
+- name: "Step 1: Check groups exists"
+  ansible.builtin.include_tasks: check_groups_exests.yml
+
+- name: "Step 2: Check variables exists"
+  ansible.builtin.include_tasks: check_vars_exists.yml
+
+- name: "Step 3: Installing Kubernetetes’ Dependencies"
+  ansible.builtin.include_tasks: dependencies_installation.yml
+
+- name: "Step 4: Setting Up the Control Plane Node"
+  ansible.builtin.include_tasks: control_nodes.yml
+
+- name: "Step 5: Setting Up the Worker Nodes"
+  ansible.builtin.include_tasks: worker_nodes.yml
+
+- name: "Step 6: Install helm"
+  ansible.builtin.include_tasks: helm_installation.yml
+
+- name: "Step 7: Install ingress nginx"
+  ansible.builtin.include_tasks: ingress_nginx_installation.yml
+
+- name: "Step 8: Install MetalLB"
+  ansible.builtin.include_tasks: metallb_installation.yml
