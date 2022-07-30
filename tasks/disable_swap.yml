@@ -1,7 +1,7 @@
 ---
 - name: Disabled swap 1/2
   ansible.builtin.replace:
-    path: /testswap.txt
+    path: /etc/fstab
     regexp: '^([^#].*?\sswap\s+.*?sw\s+.*)$'
     replace: '# \1'
   become: true
