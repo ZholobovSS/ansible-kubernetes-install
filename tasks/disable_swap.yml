@@ -1,0 +1,11 @@
+---
+- name: Disabled swap 1/2
+  ansible.builtin.replace:
+    path: /testswap.txt
+    regexp: '^([^#].*?\sswap\s+.*?sw\s+.*)$'
+    replace: '# \1'
+  become: true
+
+- name: Disabled swap 2/2
+  ansible.builtin.command: swapoff -a
+  become: true

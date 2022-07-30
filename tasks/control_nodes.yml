@@ -1,9 +1,7 @@
 ---
 - name: Actions for controls nodes
   block:
-    - name: Disabled swap
-      ansible.builtin.command: swapoff -a
-      become: true
+    - ansible.builtin.include_tasks: disable_swap.yml
 
     - name: Change hostname
       ansible.builtin.command: "hostnamectl set-hostname {{ inventory_hostname }}"
