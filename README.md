@@ -15,6 +15,7 @@ Role Variables
 
     kubernetes:
       utils_version: 
+      metallb_version:
     
     user_name:
 
@@ -31,7 +32,8 @@ Including an example of how to use your role (for instance, with variables passe
     - hosts: servers
       vars:
         kubernetes:
-          utils_version: "1.24.1-00"
+          utils_version: "1.24.3-00"
+          metallb_version: "0.13.4"
         user_name: devops
       roles:
          - { role: zh2s.kubernetes_install }

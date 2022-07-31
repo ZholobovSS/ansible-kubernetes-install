@@ -4,6 +4,11 @@
     msg: "You should set value of 'kubernetes[utils_version]' variable"
   when: kubernetes["utils_version"] == None
 
+- name: "Check value of 'kubernetes[metallb_version]' variable"
+  ansible.builtin.fail:
+    msg: "You should set value of 'kubernetes[metallb_version]' variable"
+  when: kubernetes["metallb_version"] == None
+
 
 - name: "Check value of 'user_name' variable"
   ansible.builtin.fail:

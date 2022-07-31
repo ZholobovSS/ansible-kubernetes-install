@@ -3,5 +3,6 @@
 
 kubernetes:
   utils_version: 
+  metallb_version:
 
 user_name:

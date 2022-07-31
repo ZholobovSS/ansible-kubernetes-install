@@ -10,20 +10,25 @@
         sed -e "s/mode: \"\"/mode: \"ipvs\"/" |
         kubectl apply -f - -n kube-system
 
-    - name: Create values.yaml file for MetalLB
+    - name: Create metallb-pool.yaml file for MetalLB
       ansible.builtin.template:
-        src: "values.j2"
-        dest: "$HOME/values.yaml"
+        src: "metallb-pool.j2"
+        dest: "$HOME/metallb-pool.yaml"
 
-    - name: Add MetalLB repo to helm
+    - name: Install metallb-native
       args:
         chdir: $HOME
-      ansible.builtin.shell: helm repo add metallb https://metallb.github.io/metallb
-
-    - name: Install metallb MetalLB
+      ansible.builtin.shell: 'kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v{{ kubernetes["metallb_version"] }}/config/manifests/metallb-native.yaml'
+    
+    - name: Apply metall-pull.yaml file
       args:
         chdir: $HOME
-      ansible.builtin.shell: helm install metallb metallb/metallb -f values.yaml
+      ansible.builtin.shell: kubectl apply -f metallb-pool.yaml 
+      retries: 3
+      delay: 10
+      register: task_result
+      until: task_result.rc == 0 
+
   when: inventory_hostname in groups['control_nodes']
   become: yes
   become_user: "{{ user_name }}"

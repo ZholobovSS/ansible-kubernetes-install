@@ -1,8 +1,0 @@
-configInline:
-  address-pools:
-   - name: default
-     protocol: layer2
-     addresses:
-    {% for host in groups['all'] %}
-    - {{hostvars[host].ansible_default_ipv4.address}}/32
-    {% endfor %}

@@ -1,0 +1,10 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: first-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  {% for host in groups['all'] %}
+  - {{hostvars[host].ansible_default_ipv4.address}}/32
+  {% endfor %}
