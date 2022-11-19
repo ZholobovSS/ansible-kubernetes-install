@@ -1,0 +1,40 @@
+---
+- name: Disabled swap 1/2
+  ansible.builtin.replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+.*?sw\s+.*)$'
+    replace: '# \1'
+  become: true
+
+- name: Disabled swap 2/2
+  ansible.builtin.command: swapoff -a
+  become: true
+
+- name: Load kernel modules
+  become: yes
+  ansible.builtin.shell: |
+    tee /etc/modules-load.d/containerd.conf <<EOF
+    overlay
+    br_netfilter
+    EOF
+
+- name: Modprobe overlay
+  become: yes
+  ansible.builtin.shell: modprobe overlay
+
+- name: Modprobe br_netfilter
+  become: yes
+  ansible.builtin.shell: modprobe br_netfilter
+
+- name: Network settings
+  become: yes
+  ansible.builtin.shell: |
+    sudo tee /etc/sysctl.d/kubernetes.conf <<EOF
+    net.bridge.bridge-nf-call-ip6tables = 1
+    net.bridge.bridge-nf-call-iptables = 1
+    net.ipv4.ip_forward = 1
+    EOF 
+
+- name: Apply above changes
+  become: yes
+  ansible.builtin.shell: sysctl --system

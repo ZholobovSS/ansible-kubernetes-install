@@ -1,13 +1,13 @@
 ---
 - name: Actions for controls nodes
   block:
-    - ansible.builtin.include_tasks: disable_swap.yml
 
     - name: Change hostname
       ansible.builtin.command: "hostnamectl set-hostname {{ inventory_hostname }}"
 
     - name: Initialize the cluster
-      ansible.builtin.shell: kubeadm init --pod-network-cidr=10.244.0.0/16 >> cluster_initialized.txt
+      become: yes
+      ansible.builtin.shell: kubeadm init --pod-network-cidr=10.244.0.0/16 --control-plane-endpoint={{ hostvars['control_node_1'].ansible_default_ipv4.address }} --apiserver-advertise-address={{ hostvars['control_node_1'].ansible_default_ipv4.address }} >> cluster_initialized.txt
       args:
         chdir: $HOME
         creates: cluster_initialized.txt

@@ -1,33 +1,16 @@
 ---
-- name: Create Docker config directory
-  ansible.builtin.file:
-    path: "/etc/docker"
-    state: directory
-
-- name: Changing Docker to systemd driver
-  ansible.builtin.copy:
-    dest: "/etc/docker/deamon.json"
-    content: |
-      {
-        "exec-opts": ["native.cgroupdriver=systemd"]
-      }
-
-- name: Install Docker
+- name: Install utils
   ansible.builtin.apt:
-    name: docker.io
+    pkg:
+      - curl
+      - gnupg2 
+      - software-properties-common 
+      - apt-transport-https 
+      - ca-certificates
     state: present
     update_cache: true
 
-- name: Install APT Transport HTTPS
-  ansible.builtin.apt:
-    name: apt-transport-https
-    state: present
-
-- name: Install gnupg
-  ansible.builtin.apt:
-    name: gnupg
-    state: present
-    update_cache: true
+- ansible.builtin.include_tasks: containerd_installation.yaml
 
 - name: Add Kubernetes apt-key
   ansible.builtin.apt_key:
@@ -40,30 +23,24 @@
     state: present
     filename: "kubernetes"
 
-- name: Install kubelet
+- name: Install kubelet kubeadm kubectl
+  become: yes
   ansible.builtin.apt:
-    name: 'kubelet={{ kubernetes["utils_version"] }}'
+    pkg:
+      - kubelet
+      - kubeadm
+      - kubectl 
     state: present
     update_cache: true
 
-- name: Install kubeadm
-  ansible.builtin.apt:
-    name: 'kubeadm={{ kubernetes["utils_version"] }}'
-    state: present
+- name: Hold kubelet kubeadm kubectl
+  become: yes
+  ansible.builtin.shell: apt-mark hold kubelet kubeadm kubectl
 
-- name: Install kubectl
-  block:
-    - name: Install kubectl
-      ansible.builtin.apt:
-        name: 'kubectl={{ kubernetes["utils_version"] }}'
-        state: present
-        force: yes
-
-    - name: Enable kubectl autocompletion
-      become: yes
-      become_user: "{{ user_name }}"
-      args:
-        chdir: $HOME
-      ansible.builtin.shell: echo 'source <(kubectl completion bash)' >>~/.bashrc
-
+- name: Enable kubectl autocompletion
+  become: yes
+  become_user: "{{ user_name }}"
+  args:
+    chdir: $HOME
+  ansible.builtin.shell: echo 'source <(kubectl completion bash)' >>~/.bashrc
   when: inventory_hostname in groups['control_nodes']

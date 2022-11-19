@@ -6,20 +6,23 @@
 - name: "Step 2: Check variables exists"
   ansible.builtin.include_tasks: check_vars_exists.yml
 
-- name: "Step 3: Installing Kubernetetes’ Dependencies"
+- name: "Step 3: kernel settings"
+  ansible.builtin.include_tasks: kernal_settings.yml
+
+- name: "Step 4: Installing Kubernetetes’ Dependencies"
   ansible.builtin.include_tasks: dependencies_installation.yml
 
-- name: "Step 4: Setting Up the Control Plane Node"
+- name: "Step 5: Setting Up the Control Plane Node"
   ansible.builtin.include_tasks: control_nodes.yml
 
-- name: "Step 5: Setting Up the Worker Nodes"
+- name: "Step 6: Setting Up the Worker Nodes"
   ansible.builtin.include_tasks: worker_nodes.yml
 
-- name: "Step 6: Install helm"
+- name: "Step 7: Install helm"
   ansible.builtin.include_tasks: helm_installation.yml
 
-- name: "Step 7: Install ingress nginx"
+- name: "Step 8: Install ingress nginx"
   ansible.builtin.include_tasks: ingress_nginx_installation.yml
 
-- name: "Step 8: Install MetalLB"
+- name: "Step 9: Install MetalLB"
   ansible.builtin.include_tasks: metallb_installation.yml

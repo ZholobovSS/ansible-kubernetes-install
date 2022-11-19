@@ -12,7 +12,6 @@
 
 - name: Actions for workers nodes
   block:
-    - ansible.builtin.include_tasks: disable_swap.yml
 
     - name: Change hostname
       ansible.builtin.command: "hostnamectl set-hostname {{ inventory_hostname }}"
