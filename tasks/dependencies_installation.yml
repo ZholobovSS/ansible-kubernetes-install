@@ -44,3 +44,18 @@
     chdir: $HOME
   ansible.builtin.shell: echo 'source <(kubectl completion bash)' >>~/.bashrc
   when: inventory_hostname in groups['control_nodes']
+
+- name: Stop apparmor
+  ansible.builtin.service:
+    name: apparmor 
+    state: stopped
+
+- name: Disabled apparmor
+  ansible.builtin.service:
+    name: apparmor
+    enabled: no
+
+- name: restart containerd
+  ansible.builtin.service:
+    name: containerd
+    state: restarted
