@@ -10,7 +10,7 @@
     state: present
     update_cache: true
 
-- ansible.builtin.include_tasks: containerd_installation.yaml
+- ansible.builtin.include_tasks: cri-o_installation.yaml
 
 - name: Add Kubernetes apt-key
   ansible.builtin.apt_key:
@@ -55,7 +55,7 @@
     name: apparmor
     enabled: no
 
-- name: restart containerd
-  ansible.builtin.service:
-    name: containerd
-    state: restarted
+# - name: restart containerd
+#   ansible.builtin.service:
+#     name: containerd
+#     state: restarted

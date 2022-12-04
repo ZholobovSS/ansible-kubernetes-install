@@ -18,3 +18,8 @@ containerd_config_default_write: true
 # Set systemd as cgroup driver in config.toml
 # Only use with containerd_config_default_write: true
 containerd_config_cgroup_driver_systemd: true
+
+
+# cri-o vars
+crio_os: xUbuntu_22.04
+crio_version: 1.24

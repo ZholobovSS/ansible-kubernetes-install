@@ -1,0 +1,34 @@
+---
+
+- name: Add cri-o repository for ubuntu 22.04
+  ansible.builtin.shell: |
+    echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{ crio_os }}/ /" > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+    echo "deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{ crio_version }}/{{ crio_os }}/ /" > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:{{ crio_version }}.list
+
+- name: Add the GPG key for the CRI-O repository using the below command
+  ansible.builtin.shell: |
+    curl -L https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:{{ crio_version }}/{{ crio_os }}/Release.key | apt-key add -
+    curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{ crio_os }}/Release.key | apt-key add -
+
+- name: Install utils
+  ansible.builtin.apt:
+    pkg:
+      - cri-o 
+      - cri-o-runc
+    state: present
+    update_cache: true
+
+- name: Hold cri-o and cri-o-runc
+  become: yes
+  ansible.builtin.shell:  apt-mark hold cri-o cri-o-runc
+
+- name: start cri-o
+  ansible.builtin.service:
+    name: crio
+    state: started
+
+- name: enabled crio
+  ansible.builtin.service:
+    name: crio
+    enabled: yes
+
