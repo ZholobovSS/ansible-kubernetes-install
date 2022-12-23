@@ -5,6 +5,6 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-  {% for host in groups['all'] %}
+  {% for host in groups['control_nodes'] %}
   - {{hostvars[host].ansible_default_ipv4.address}}/32
   {% endfor %}
