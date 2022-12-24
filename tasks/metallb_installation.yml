@@ -9,21 +9,37 @@
         sed -e "s/strictARP: false/strictARP: true/" |
         sed -e "s/mode: \"\"/mode: \"ipvs\"/" |
         kubectl apply -f - -n kube-system
+      when: metallb_change_strict_arp
 
     - name: Create metallb-pool.yaml file for MetalLB
       ansible.builtin.template:
         src: "metallb-pool.j2"
         dest: "$HOME/metallb-pool.yaml"
 
+    - name: Create L2Advertisement.yaml file for MetalLB
+      ansible.builtin.template:
+        src: "L2Advertisement.j2"
+        dest: "$HOME/L2Advertisement.yaml"
+
+
     - name: Install metallb-native
       args:
         chdir: $HOME
-      ansible.builtin.shell: 'kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v{{ kubernetes["metallb_version"] }}/config/manifests/metallb-native.yaml'
+      ansible.builtin.shell: 'kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v{{ metallb["version"] }}/config/manifests/metallb-native.yaml'
     
     - name: Apply metall-pull.yaml file
       args:
         chdir: $HOME
       ansible.builtin.shell: kubectl apply -f metallb-pool.yaml 
+      retries: 3
+      delay: 10
+      register: task_result
+      until: task_result.rc == 0 
+    
+    - name: Apply L2Advertisement.yaml file
+      args:
+        chdir: $HOME
+      ansible.builtin.shell: kubectl apply -f L2Advertisement.yaml 
       retries: 3
       delay: 10
       register: task_result

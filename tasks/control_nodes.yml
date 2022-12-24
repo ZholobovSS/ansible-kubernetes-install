@@ -26,6 +26,7 @@
         dest: "/home/{{ user_name }}/.kube/config"
         remote_src: yes
         owner: "{{user_name}}"
+        mode: 0600
 
     - name: Install Pod network
       become: yes

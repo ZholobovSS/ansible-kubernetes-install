@@ -2,9 +2,9 @@
 # defaults file for zh2s.kubernetes_install
 
 kubernetes:
-  metallb_version:
+  utils_version: "1.25.4-00"
 
-user_name:
+user_name: devops
 
 docker_apt_release_channel: stable
 docker_apt_arch: '{{ (ansible_architecture == "aarch64") | ternary("arm64", "amd64") }}'
@@ -18,3 +18,11 @@ containerd_config_default_write: true
 # Set systemd as cgroup driver in config.toml
 # Only use with containerd_config_default_write: true
 containerd_config_cgroup_driver_systemd: true
+
+
+
+# metallb settings
+metallb_change_strict_arp: false
+metallb:
+  version: "0.13.7"
+  pool_name: "first-pool"

@@ -27,9 +27,9 @@
   become: yes
   ansible.builtin.apt:
     pkg:
-      - kubelet
-      - kubeadm
-      - kubectl 
+      - kubelet={{ kubernetes["utils_version"] }}
+      - kubeadm={{ kubernetes["utils_version"] }}
+      - kubectl={{ kubernetes["utils_version"] }} 
     state: present
     update_cache: true
 
