@@ -1,15 +1,15 @@
 ---
 # tasks file for zh2s.kubernetes_install
 - name: "Step 1: Check groups exists"
-  ansible.builtin.include_tasks: check_groups_exests.yml
+  ansible.builtin.include_tasks: check_groups_exists.yml
 
 - name: "Step 2: Check variables exists"
   ansible.builtin.include_tasks: check_vars_exists.yml
 
 - name: "Step 3: kernel settings"
-  ansible.builtin.include_tasks: kernal_settings.yml
+  ansible.builtin.include_tasks: kernel_settings.yml
 
-- name: "Step 4: Installing Kubernetetes’ Dependencies"
+- name: "Step 4: Installing Kubernetes Dependencies"
   ansible.builtin.include_tasks: dependencies_installation.yml
 
 - name: "Step 5: Setting Up the Control Plane Node"
