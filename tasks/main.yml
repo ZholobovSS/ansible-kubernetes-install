@@ -14,15 +14,20 @@
 
 - name: "Step 5: Setting Up the Control Plane Node"
   ansible.builtin.include_tasks: control_nodes.yml
+  when: installation_type == "FULL" or installation_type == "ONLY_MASTER"
 
 - name: "Step 6: Setting Up the Worker Nodes"
   ansible.builtin.include_tasks: worker_nodes.yml
+  when: installation_type == "FULL" or installation_type == "ONLY_WORKER"
 
 - name: "Step 7: Install helm"
   ansible.builtin.include_tasks: helm_installation.yml
+  when: installation_type == "FULL" or installation_type == "ONLY_MASTER" 
 
 - name: "Step 8: Install ingress nginx"
   ansible.builtin.include_tasks: ingress_nginx_installation.yml
+  when: installation_type == "FULL"
 
 - name: "Step 9: Install MetalLB"
   ansible.builtin.include_tasks: metallb_installation.yml
+  when: installation_type == "FULL"
